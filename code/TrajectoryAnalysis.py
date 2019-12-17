@@ -103,9 +103,8 @@ class FileTrajectoryAnalysis:
 
     @_decorator 
     def get_distance_all(self):
-        f, *_ = args 
-        x = f.readlines()
-        size_x = len(x)
+        pass 
+
 
         
 
