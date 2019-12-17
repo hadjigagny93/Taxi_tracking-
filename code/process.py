@@ -22,14 +22,14 @@ class Process:
     """
     
     def __init__(self, base_path="/Users/elhadjigagnysylla/Desktop/Machine_learning/Taxi_tracking/Taxi_tracking-/data/T drive taxi/release"):
-        try:
-            os.path.exists(base_path)
+        if  os.path.exists(base_path):
             self.base_path = base_path
-        except: 
-            raise IsADirectoryError()
+        else: 
+            raise OSError("path error")
+
         self.tracking_files = []
-        self.samples_size = 0 # number of files to process for the training 
-        self.repository_path = "/Users/elhadjigagnysylla/Desktop/Machine_learning/Taxi_tracking/Taxi_tracking-/data/T drive processed/"
+        self.samples_size = 1 # number of files to process for the training 
+        self.REPO_PATH = "/Users/elhadjigagnysylla/Desktop/Machine_learning/Taxi_tracking/Taxi_tracking-/data/T drive processed/"
 
     def file_track(self, path):
         if path in self.tracking_files:
@@ -91,7 +91,7 @@ class Process:
                         proceesed_one = self.one_file_processing(file_path=_path_)
                         files.append(processed_one)
                 except:
-                    raise FileNotFoundError("the giving path dos not exist")
+                    raise FileNotFoundError("the giving path does not exist")
         else:
             for _ in range(self.samples_size):
                 proceesed_one = self.one_file_processing()
@@ -172,15 +172,6 @@ class Process:
 
 
         
-
-
-
-
-
-
-    def file_processing(self, path):
-
-
 
 
         
