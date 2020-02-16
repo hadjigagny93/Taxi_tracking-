@@ -35,11 +35,10 @@ class FileTrajectoryAnalysis:
     """
     this class is created to return some infos about a trajectory data informations 
     recoreded in a given file. here is a description of all attributes and methods 
-    developed in the class 
+    developed in the class
 
     attributes:
     -----------
-
 
 
 
@@ -72,7 +71,7 @@ class FileTrajectoryAnalysis:
         self.h_records = None 
 
     
-    def _decorator(foo):
+    def decor(foo):
         def wrapper(self):
             try:
                 with open(self.path) as f:
@@ -82,17 +81,17 @@ class FileTrajectoryAnalysis:
 
         return wrapper
 
-    @_decorator
+    @decor
     def get_user(self, *args, **kwargs):
         f, *_ = args
         self.user, *infos = f.readline()
 
-    @_decorator
+    @decor
     def get_records_all(self, *args, **kwargs):
         f, *_ = args 
         self.records_all = len(f.readlines())
 
-    @_decorator
+    @decor
     def get_time_all(self):
         f, *_ = args 
         x = f.readlines()
@@ -101,7 +100,7 @@ class FileTrajectoryAnalysis:
         start = [elt.split(",")[1] for elt in x[:size_x-1]]
         self.time_all = [get_granular_duration(s[0], s[1]) for s in zip(start, end)]
 
-    @_decorator 
+    @decor
     def get_distance_all(self):
         pass 
 

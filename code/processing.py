@@ -8,10 +8,12 @@ import random
 import csv 
 
 
-def format(_iterable_):
+def transform(iterable):
     # transform iterable variable to list of file path 
-    return
+     return iterable
 
+#
+ 
 class Processing:
     """
     attributes:
@@ -26,8 +28,8 @@ class Processing:
     def __init__(self, target=None, random_=False, batch_size=1, full=False):
 
 
-        self.__FILES_REPO_PATH = None # TODO 
-        self.__BATCH_FILE_OUTPUT_PATH = None  # TODO 
+        self._FILES_REPO_PATH = None # TODO 
+        self._BATCH_FILE_OUTPUT_PATH = None  # TODO 
 
         if not target:
             if full:
@@ -35,14 +37,14 @@ class Processing:
             if not random_:
                 raise ValueError("if not target, random must be automatically set to True")
 
-            self.__target = target
+            self._target = target
         else:
-            self.__target = format(target)
+            self._target = transform(target)
 
 
-        self.__batch_size = batch_size 
-        self.__full = full 
-        self.__random = random_ and self.target is None
+        self._batch_size = batch_size 
+        self._full = full 
+        self._random = random_ and self.target is None
 
         self.tracking_files = [] # set it only for random option 
 
@@ -50,14 +52,16 @@ class Processing:
     def get_attr(self):
 
         _infos_ = dict([
-            ("files repo path", self.__FILES_REPO_PATH),
-            ("batch file output path", self.__BATCH_FILE_OUTPUT_PATH),
-            ("full parameter", self.__full),
-            ("batch size", self.batch_size),
-            ("random option", self.__random),
+            ("files repo path", self._FILES_REPO_PATH),
+            ("batch file output path", self._BATCH_FILE_OUTPUT_PATH),
+            ("full parameter", self._full),
+            ("batch size", self._batch_size),
+            ("random option", self._random),
             ])
         return _infos_
 
+        # a simple way to do it ... dict keys must be more explicit 
+        # return self.__dict__
 
     def random_generating(self):
 
@@ -72,7 +76,7 @@ class Processing:
 
 
     def fit_batch(self, *args, **kwargs):
-        if self.__target:
+        if self._target:
             return 
 
         # get (batch_size) random files and save their paths into self.tracking_files list 
