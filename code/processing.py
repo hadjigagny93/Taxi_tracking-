@@ -12,8 +12,6 @@ def transform(iterable):
     # transform iterable variable to list of file path 
      return iterable
 
-#
- 
 class Processing:
     """
     attributes:

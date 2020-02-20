@@ -5,6 +5,7 @@ import numpy as np
 
 (lon_inf, lon_sup, lat_inf, lat_sup) = (0,0,0,0) # TODO 
 
+"""
 class GeoDataProcess:
 
     def __init__(self, city_limits, *args, **kwargs):
@@ -34,54 +35,93 @@ class GeoDataProcess:
     def get_granular_speed(self, lon_start=None, lat_start=None, lon_end=None, lat_end=None, time_start=None, time_end=None):
 
         return self.get_granular_distance(lon_start, lat_start, lon_end, lat_end, time_start, time_end)/ self.get_granular_duration(time_start, time_end)
+"""
 
-    def mesh_intersect(self,i=0,size=50):
+class Point:
+    def __init__(self, coor):
+        self.x , self.y = coor
+        
+    def __str__(self):
+        return "({}, {})".format(self.x, self.y)
 
-        lon = self.lon
-        lat = self.lat
-        return ((lat[i//size], lon[i%size]), (lat[i//size] ,lon[i%size +1]), (lat[i//size +1],lon[i%size]), (lat[i//size +1],lon[i%size + 1]))
-
-    def update_mesh(self, size=50):
-
-        """
-        update mesh class attribute as a dictionnary containing a tuple of 
-        4 tuples (lat_k, lon_k) for k in [0, 1]
-
-        ex:
-        ---
-        ((lat_0, lon_O), (lat_0, lon_1),(lat_1, lon_O),(lat_1, lon_1)) as key 
-        j: as value with j in range(size**2)
-        """
-        if self.mesh:
-            return
-        else:
-
-            self.mesh =  {self.mesh_intersect(i): i for i in range(size**2)}
-
-    def match_position_grid(self, lat, lon):
-
-        if not self.mesh:
-            self.update_mesh()
-
-        # get dict key by performing two simultanaite quicksort research 
-        # over lat & lon attributes 
-
-        x = list(1 * (self.lat <= lat)).index(0)
-        y = list(1 * (self.lon <= lon)).index(0)
- 
-        _key_ = (
-            (self.lat[x-1], self.lon[y-1]),
-            (self.lat[x-1], self.lon[y]),
-            (self.lat[x], self.lon[y-1]),
-            (self.lat[x], self.lon[y]))
-
-        return self.mesh[_key_]
-
+    @classmethod
+    def add(cls, coor):
+        return cls(coor=coor)
+    
+    def add(self, pas):
+        coor = (self.x + pas[0], self.y + pas[1])
+        self.add_v(coor)
         
 
+class Boundary:
 
+    geometry = "SQ"
+    
+    def __init__(self, point0=None, point1=None, point2=None, point3=None, label=None):
+        
+        self.point0 = point0
+        self.point1 = point1 
+        self.point2 = point2
+        self.point3 = point3 
+        self.label = label
+        
+    def __str__(self):
+        return "{} --- {}, {}, {}, {}".format(self.label, self.point0, self.point1, self.point2, self.point3)
+    
+    def __contains__(self, point):
+        x1 , y1 = self.point0.x, self.point0.y
+        x2 , y2 = self.point1.x, self.point1.y
+        x3 , y3 = self.point2.x, self.point2.y
+        x4 , y4 = self.point3.x, self.point3.y
+        return x1 < point.x < x3 and y4 < point.y < y2
     
 
+class IterableBoundary:
+
+    def __init__(self):
+        
+        self.F0 = Point((0,1))
+        self.F1 = Point((1,1))
+        self.F2 = Point((1,0))
+        self.F3 = Point((0,0))
+
+    def mesh(self):
+        self.lon_mesh = np.linspace(self.F0.x, self.F1.x, self._grid_size + 1)
+        self.lat_mesh = np.linspace(self.F2.y, self.F1.y, self._grid_size + 1)
+    
+
+    @property 
+    def grid_size(self):
+        return self._grid_size
+    
+    @grid_size.setter
+    def grid_size(self, grid_size):
+        if grid_size <= 0:
+            raise ValueError("Can not be negative int")
+        self._grid_size = grid_size 
+        self.start = 0
+        self.end = self._grid_size**2
+        self.mesh()
+            
+    def __iter__(self):
+        index = 0
+        while index < self.end:
+            current_boundary = self.get_current_boundary(index)
+            yield current_boundary
+            index += 1
+
+    @staticmethod 
+    def div(j, k):
+        return j // k, j % k
+    
+    def get_current_boundary(self, i):
+        y_idx, x_idx = self.div(i, self._grid_size)
+        point0 = Point((self.lon_mesh[x_idx], self.lat_mesh[y_idx+1]))
+        point1 = Point((self.lon_mesh[x_idx+1], self.lat_mesh[y_idx+1]))
+        point2 = Point((self.lon_mesh[x_idx+1], self.lat_mesh[y_idx]))
+        point3 = Point((self.lon_mesh[x_idx], self.lat_mesh[y_idx]))
+        return Boundary(point0, point1, point2, point3, i)
+        
 
 
 
@@ -123,22 +163,4 @@ class GeoDataProcess:
 
 
 
-        
-
-
-
-
-
-
- 
-
-
-
-        return 
-
-
-    def grid_search(self, lon , lat):
-
-        return 
-
-    
+     
