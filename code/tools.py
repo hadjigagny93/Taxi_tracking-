@@ -1,46 +1,11 @@
-    
 import geopy.distance as ds 
-import datetime 
 import numpy as np 
-
-(lon_inf, lon_sup, lat_inf, lat_sup) = (0,0,0,0) # TODO 
-
-"""
-class GeoDataProcess:
-
-    def __init__(self, city_limits, *args, **kwargs):
-
-        self.mesh = None 
-        if city_limits:
-            self.beiijing_limits = city_limits 
-        else:
-            self.beiijing_limits = (lon_inf, lon_sup, lat_inf, lat_sup)
-    
-        
-        self.lon = np.linspace(lon_inf, lon_sup, size + 1)
-        self.lat = np.linspace(lat_inf, lat_sup, size + 1)
-    
-
-    def get_granular_distance(self, lon_start=None, lat_start=None, lon_end=None, lat_end=None):
-    
-        position_start, position_end = (lon_start, lat_start), (lon_end, lat_end)
-        return ds.vincenty(position_start, position_end).km 
-      
-    def get_granular_duration(self, time_start=None, time_end=None):
-
-        time_start = datetime.datetime.strptime(time_start,'%Y-%m-%d %H:%M:%S.%f')
-        time_end   = datetime.datetime.strptime(time_end,'%Y-%m-%d %H:%M:%S.%f')
-        return time_end - time_start
-    
-    def get_granular_speed(self, lon_start=None, lat_start=None, lon_end=None, lat_end=None, time_start=None, time_end=None):
-
-        return self.get_granular_distance(lon_start, lat_start, lon_end, lat_end, time_start, time_end)/ self.get_granular_duration(time_start, time_end)
-"""
+import datetime 
 
 class Point:
     def __init__(self, coor):
         self.x , self.y = coor
-        
+
     def __str__(self):
         return "({}, {})".format(self.x, self.y)
 
@@ -54,11 +19,9 @@ class Point:
         
 
 class Boundary:
-
     geometry = "SQ"
-    
+
     def __init__(self, point0=None, point1=None, point2=None, point3=None, label=None):
-        
         self.point0 = point0
         self.point1 = point1 
         self.point2 = point2
@@ -77,9 +40,8 @@ class Boundary:
     
 
 class IterableBoundary:
-
+    
     def __init__(self):
-        
         self.F0 = Point((0,1))
         self.F1 = Point((1,1))
         self.F2 = Point((1,0))
@@ -89,7 +51,6 @@ class IterableBoundary:
         self.lon_mesh = np.linspace(self.F0.x, self.F1.x, self._grid_size + 1)
         self.lat_mesh = np.linspace(self.F2.y, self.F1.y, self._grid_size + 1)
     
-
     @property 
     def grid_size(self):
         return self._grid_size
