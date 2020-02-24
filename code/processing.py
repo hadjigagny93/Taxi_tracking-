@@ -66,5 +66,7 @@ class ProcessingForClustering(Processing):
 
 
 class ProcessingForRS(Processing):
+
+    
     pass 
 
