@@ -2,71 +2,66 @@ import os
 import random 
 import csv 
 
-def transform(iterable):
-    # transform iterable variable to list of file path 
-     return iterable
-
 class Processing:
     """
-    attributes:
-    -----------
-    methods:
-    --------
+    attributes
+    ----------
+    methods
+    -------
     """
-    def __init__(self, target=None, random_=False, batch_size=1, full=False):
+    def __init__(self, target=None, random=False, batch_size=1, full=False):
 
-        self._FILES_REPO_PATH = None # TODO 
+        self._FILES_REPO_PATH = "/Users/elhadjigagnysylla/Desktop/Machine_learning/datasets/taxi/data/taxi_log_2008_by_id"
         self._BATCH_FILE_OUTPUT_PATH = None  # TODO 
         if not target:
             if full:
                 raise ValueError("the given value for full parameter is deprecated -- memory restriction")
-            if not random_:
+            if not random:
                 raise ValueError("if not target, random must be automatically set to True")
-            self._target = target
+            self.target = target
         else:
-            self._target = transform(target)
-        self._batch_size = batch_size 
-        self._full = full 
-        self._random = random_ and self.target is None
+            self._target = target 
+        self.batch_size = batch_size
+        self.full = full 
+        self.random = random and self.target is None
         self.tracking_files = [] # set it only for random option 
 
-    def get_attr(self):
-        _infos_ = dict([
-            ("files repo path", self._FILES_REPO_PATH),
-            ("batch file output path", self._BATCH_FILE_OUTPUT_PATH),
-            ("full parameter", self._full),
-            ("batch size", self._batch_size),
-            ("random option", self._random),
-            ])
-        return _infos_
+    def __str__(self):
+        
+        return "infos -- {}".format(self.__dict__)
         # a simple way to do it ... dict keys must be more explicit 
         # return self.__dict__
-
-    def random_generating(self):
-        file = os.path.join(self.__FILES_REPO_PATH,random.choice(os.listdir(self.__FILES_REPO_PATH)))
-        if file not in self.tracking_files:
-            self.tracking_files.append(file)
-        if len(self.tracking_files) == self.batch_size:
-            return 
-        else:
-            self.random_generating
-
+    
+    def _random_generating(self): # make this function recursive 
+        whl = True
+        while whl:
+            for _ in range(self. batch_size):
+                file = os.path.join(self._FILES_REPO_PATH,random.choice(os.listdir(self._FILES_REPO_PATH)))
+                self.tracking_files.append(file)
+            whl = len(set(self.tracking_files)) != self.batch_size
+    
     def fit_batch(self, *args, **kwargs):
-        if self._target:
+        if self.target:
             return 
         # get (batch_size) random files and save their paths into self.tracking_files list 
-        self.random_generating()
+        self._random_generating()
 
     def get_csv(self, *args, **kwargs):
-        return 
+        if self.target:
+            return self.target 
+        else:
+            return self.tracking_files
 
 
 class ProcessingForClustering(Processing):
-    pass 
-
+    def __init__(self, target=None, random=False, batch_size=1, full=False, others=None):
+        super().__init__(target=None, random=False, batch_size=1, full=False)
+        self.others = others 
+    
 
 class ProcessingForRS(Processing):
+    def __init__(self, target=None, random=False, batch_size=1, full=False, others=None):
+        super().__init__(target=None, random=False, batch_size=1, full=False)
+        self.others = others 
 
-    
-    pass 
 
