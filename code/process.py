@@ -61,27 +61,29 @@ class ProcessingForRS(Processing):
         self.grid_size = grid_size 
     
     def process(self):
+        
         w = {False: self.target, True: self.tracking_files}
         files = w[self.random is True]
-        data = []
+        dataframes = []
+        mms = MinMaxScaler()
+        scorer = Naive(grid_size=self.grid_size)
         for file in files:
-            scorer = Naive(file=file, grid_size=self.grid_size)
-            scorer.fit()
-            data.append(scorer.data)
-        return pd.DataFrame(data ,ignore_index=True)
-
+            data = pd.read_table(file, sep=",", index_col=[0])
+            taxi_id = data.iloc[0].id
+            data.position_lon = mms.fit_transform(data.position_lon.values.reshape(-1, 1))
+            data.position_lat = mms.fit_transform(data.position_lat.values.reshape(-1, 1))
+            data["coor"] = data[["position_lon", "position_lat"]].apply(__tuple__, axis=1)
+            data = data.drop(["position_lon", "position_lat", "time_stamp"], axis=1)
+            data["label"] = data.coor.apply(lambda x: scorer.get_label(x))
+            data = data.drop("coor", axis=1)
+            data = data.groupby("label")["id"].count().reset_index()
+            data = data.rename(columns={"label": "labelID", "id": "Rating"})
+            data["taxiID"] = [taxi_id] * len(data)
+            data = data[["taxiID", "labelID", "Rating"]]
+            dataframes.append(data)
+        return pd.concat(dataframes ,ignore_index=True)
         
 
-
-     
-
-
-
-
-
-    
-    
-    def fit(self):
 
 
 
