@@ -2,6 +2,7 @@ import os
 import random 
 import csv 
 
+from scoring import Naive 
 class Processing:
     """
     attributes
@@ -25,6 +26,7 @@ class Processing:
         self.full = full 
         self.random = random and self.target is None
         self.tracking_files = [] # set it only for random option 
+
 
     def __str__(self):
         
@@ -52,14 +54,41 @@ class Processing:
         else:
             return self.tracking_files
 
-
-class ProcessingForClustering(Processing):
-    def __init__(self, target=None, random=False, batch_size=1, full=False, others=None):
+class ProcessingForRS(Processing):
+    def __init__(self, target=None, random=False, batch_size=1, full=False, rating="Naive", grid_size=4):
         super().__init__(target=None, random=False, batch_size=1, full=False)
-        self.others = others 
+        self.rating = rating
+        self.grid_size = grid_size 
+    
+    def process(self):
+        w = {False: self.target, True: self.tracking_files}
+        files = w[self.random is True]
+        data = []
+        for file in files:
+            scorer = Naive(file=file, grid_size=self.grid_size)
+            scorer.fit()
+            data.append(scorer.data)
+        return pd.DataFrame(data ,ignore_index=True)
+
+        
+
+
+     
+
+
+
+
+
+    
+    
+    def fit(self):
+
+
+
+
     
 
-class ProcessingForRS(Processing):
+class ProcessingForClustering(Processing):
     def __init__(self, target=None, random=False, batch_size=1, full=False, others=None):
         super().__init__(target=None, random=False, batch_size=1, full=False)
         self.others = others 

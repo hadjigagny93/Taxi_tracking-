@@ -31,7 +31,6 @@ class Point:
         coor = (self.x + pas[0], self.y + pas[1])
         return self.new_point(coor)
         
-
 class Boundary:
     """
     Container object
@@ -48,8 +47,6 @@ class Boundary:
     -------
     contains: magic method included for test if a given 
     point is or not inside the square defined by the four given just below 
-
-
     """
     geometry = "SQ"
     def __init__(self, point0=None, point1=None, point2=None, point3=None, label=None):
