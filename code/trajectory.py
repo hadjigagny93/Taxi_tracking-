@@ -1,6 +1,7 @@
 import geopy.distance as ds 
 
 class FileTrajectoryAnalysis:
+
     """
     this class is created to return some infos about a trajectory data informations 
     recoreded in a given file. here is a description of all attributes and methods 
@@ -11,29 +12,23 @@ class FileTrajectoryAnalysis:
     methods:
     --------
     """ 
-    def __init__(self, file_path):
-        self.path = file_path
-        self.d_time = None  
-        self.d_distance = None 
-        self.d_velocity = None 
-        self.d_records = None 
-        self.h_time = None 
-        self.h_distance = None 
-        self.h_velocity = None 
-        self.h_records = None 
+
+    def __init__(self, file):
+        self.file = file
+        self.load_info()
 
     def infile(foo):
         def wrapper(self):
             try:
-                with open(self.path) as f:
+                with open(self.file) as f:
                     foo(self, f)
             except OSError:
-                print("file do not exist")
+                print("file not found")
         return wrapper
-
+    """
     @infile
-    def update_instance(self, *args, **kwargs): # optimize 
-        f, *_ = args
+    def update_instance(self, *args, **kwargs): # optimize and factorize
+        f, *_ = args 
         lines  = f.readlines()
         self.user, *infos = lines[0].split(",")
         size_x = self.records_all = len(lines)
@@ -44,7 +39,46 @@ class FileTrajectoryAnalysis:
         start_d = [(elt.split(",")[3], elt.split(",")[2]) for elt in lines[:size_x-1]]
         self.distance_all = sum([self.get_granular_distance(s[0], s[1]) for s in zip(start_d, end_d)])
         self.velocity_all =  10000 * self.distance_all / self.time_all.seconds
-    
+    """
+    @infile
+    def lines(self):
+        f, *_ = args 
+        self.lines  = f.readlines()
+
+    def user(self):
+        self.user, *infos = self.lines[0].split(",")
+
+    def records(self):
+        self.records = len(self.lines)
+
+    def distance(self):
+        lines = self.lines 
+        size_x = self.records 
+        end_d = [(elt.split(",")[3], elt.split(",")[2]) for elt in lines[1:]]
+        start_d = [(elt.split(",")[3], elt.split(",")[2]) for elt in lines[:size_x-1]]
+        self.distance = sum([self.get_granular_distance(s[0], s[1]) for s in zip(start_d, end_d)])
+
+    def time(self):
+        lines = self.lines 
+        size_x = self.records
+        end = [elt.split(",")[1] for elt in lines[1:]]
+        start = [elt.split(",")[1] for elt in lines[:size_x-1]]
+        self.time = self.sumtime(delta=[self.get_granular_duration(s[0], s[1]) for s in zip(start, end)])
+
+    def speed(self):
+        self.speed =  10000 * self.distance / self.time.seconds
+
+    def load_info(self):
+        try:
+            self.lines()
+            self.user()
+            self.records()
+            self.distance 
+            self.time()
+            self.speed()
+        except:
+            raise ValueError("Class import error")
+
     @staticmethod
     def get_granular_distance(position_start, position_end):
         #position_start, position_end = (lon_start, lat_start), (lon_end, lat_end)
@@ -67,24 +101,6 @@ class FileTrajectoryAnalysis:
             x += time 
         return x
 
-    def get_d_velocity(self):
-        return 
-    
-    def get_d_records(self):
-        return 
-
-    def get_h_time(self):
-        return 
-
-    def get_h_distance(self):
-        return 
-
-    def get_h_velocity(self):
-        return 
-
-    def get_h_records(self):
-        return 
-    
     @staticmethod
     def hour_detection(timestamp=None):
         return 
