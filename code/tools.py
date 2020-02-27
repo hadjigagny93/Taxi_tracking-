@@ -16,7 +16,6 @@ class Point:
     new_point: class method , return a new instance with specified coordinates 
     add: class instance method that perform translation transformation 
     """
-
     def __init__(self, coor):
         self.x , self.y = coor
 
@@ -133,8 +132,9 @@ class IterableBoundary:
         point2 = static_point.add((.25,0)) #point2 = Point((self.lon_mesh[x_idx+1], self.lat_mesh[y_idx]))
         point3 = static_point.add((0,0)) #point3 = Point((self.lon_mesh[x_idx], self.lat_mesh[y_idx]))
         return Boundary(point0, point1, point2, point3, i)
-
-
+    
+    
+    
 
 
 

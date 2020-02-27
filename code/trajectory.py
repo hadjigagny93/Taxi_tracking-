@@ -1,7 +1,8 @@
-import geopy.distance as ds 
+from geopy import distance as ds 
+import datetime
 
-class FileTrajectoryAnalysis:
-
+class TargetInfo:
+    
     """
     this class is created to return some infos about a trajectory data informations 
     recoreded in a given file. here is a description of all attributes and methods 
@@ -15,7 +16,10 @@ class FileTrajectoryAnalysis:
 
     def __init__(self, file):
         self.file = file
-        self.load_info()
+        self._load_info()
+
+    def __str__(self):
+        return "user  --- {} , distance --- {}, speed --- {}, time --- {}, records --- {}".format(self.user, self.distance, self.speed, self.time, self.records)
 
     def infile(foo):
         def wrapper(self):
@@ -41,47 +45,73 @@ class FileTrajectoryAnalysis:
         self.velocity_all =  10000 * self.distance_all / self.time_all.seconds
     """
     @infile
-    def lines(self):
+    def _lines(self, *args, **kwargs):
+        print("debug lines")
         f, *_ = args 
         self.lines  = f.readlines()
-
-    def user(self):
+    
+    
+    def _user(self):
+        print("debug user")
         self.user, *infos = self.lines[0].split(",")
-
-    def records(self):
+    
+    def _records(self):
+        print("debug records")
         self.records = len(self.lines)
-
-    def distance(self):
+    
+    def _distance(self):
+        print("debug distance")
         lines = self.lines 
+        lines = lines[1:]
         size_x = self.records 
-        end_d = [(elt.split(",")[3], elt.split(",")[2]) for elt in lines[1:]]
-        start_d = [(elt.split(",")[3], elt.split(",")[2]) for elt in lines[:size_x-1]]
+        end_d = [(elt.split(",")[4].rstrip(), elt.split(",")[3]) for elt in lines[1:]]
+        start_d = [(elt.split(",")[4].rstrip(), elt.split(",")[3]) for elt in lines[:size_x-1]]
+        #print(end_d[0])
+        #print(start_d[0])
+        #print("list of distance -- {}".format(sum([self.get_granular_distance(s[0], s[1]) for s in zip(start_d, end_d)])))
+        #return 
         self.distance = sum([self.get_granular_distance(s[0], s[1]) for s in zip(start_d, end_d)])
-
-    def time(self):
+    
+    def _time(self):
+        print("debug time")
         lines = self.lines 
+        lines = lines[1:]
         size_x = self.records
-        end = [elt.split(",")[1] for elt in lines[1:]]
-        start = [elt.split(",")[1] for elt in lines[:size_x-1]]
+        end = [elt.split(",")[2] for elt in lines[1:]]
+        start = [elt.split(",")[2] for elt in lines[:size_x-1]]
+        #print(end[0])
+        #print(start[0])
+        #return 
         self.time = self.sumtime(delta=[self.get_granular_duration(s[0], s[1]) for s in zip(start, end)])
 
-    def speed(self):
+    def _speed(self):
+        print("debug speed")
         self.speed =  10000 * self.distance / self.time.seconds
 
-    def load_info(self):
+    def _load_info(self):
         try:
-            self.lines()
-            self.user()
-            self.records()
-            self.distance 
-            self.time()
-            self.speed()
+            self._lines()
+            self._user()
+            self._records()
+            self._distance()
+            #print("distance -- {}".format(self.distance))
+            self._time()
+            self._speed()
         except:
             raise ValueError("Class import error")
+    """
+    @staticmethod 
+    def __float__(x):
+        return (float(x[0]), float(x[1]))
+    """
 
     @staticmethod
     def get_granular_distance(position_start, position_end):
-        #position_start, position_end = (lon_start, lat_start), (lon_end, lat_end)
+        position_start, position_end = (float(position_start[0]), float(position_start[1])), (float(position_end[0]), float(position_end[1]))
+        #print("position start -- {}".format(position_start))
+        #print("position end -- {}".format(position_end))
+        #print("distance -- {}".format(ds.vincenty(position_start, position_end).km))
+        #return 
         return ds.vincenty(position_start, position_end).km 
      
     @staticmethod 

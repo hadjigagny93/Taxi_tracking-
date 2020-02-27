@@ -1,6 +1,5 @@
 from tools import *
 
-
 class Naive:
     def __init__(self, grid_size):
         self.grid_size = grid_size 
