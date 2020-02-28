@@ -18,7 +18,7 @@ class Processing:
 
     def __init__(self, target=None, random=False, batch_size=1, full=False):
         self._FILES_REPO_PATH = "/Users/elhadjigagnysylla/Desktop/Machine_learning/datasets/taxi/data/taxi_log_2008_by_id"
-        self._BATCH_FILE_OUTPUT_PATH = None  # TODO 
+        self._BATCH_FILE_OUTPUT_PATH = "/Users/elhadjigagnysylla/Desktop/Machine_learning/datasets/taxi/data/T drive processed/"
         if not target:
             if full:
                 raise ValueError("the given value for full parameter is deprecated -- memory restriction")
@@ -104,3 +104,18 @@ class ProcessingForClustering(Processing):
         self.others = others 
 
 
+# main function --- call ProcessingForRS class 
+# generate a random file for testing some  
+# reccommander system algorithms 
+
+def generate_file_for_RS_models():
+    pr = ProcessingForRS(random=True, batch_size=5)
+    pr.fit_batch()
+    rating_taxi = pr.process()
+    rating_taxi.to_csv(os.path.join(pr._BATCH_FILE_OUTPUT_PATH,"test_data.csv"))
+
+def main():
+    generate_file_for_RS_models()
+
+if __name__ == "__main__":
+    main()

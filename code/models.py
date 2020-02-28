@@ -11,41 +11,16 @@ class ColaborativeFiltering:
     filtering based method developed in this research paper: https://arxiv.org/pdf/1802.06398.pdf
     Find more infos in markdown file wher i explain main ideas of the method
     """
-
     pass 
 
-class KmeansClustering:
-
-    def __init__(self, X, n_clusters=3, init=True, random_state=15):
-
-        pass 
 
     
 class TemporalClustering:
-
-    """
-    Attributes:
-    -----------
-
-    args: numpy matrix  containing data for time
-
-
-
-    Methods:
-    --------
-
-
-
-    """
-    
     def __init__(self, *args, **kwargs):
         
         if type(args) is not np.ndarray:
-            raise ValueError("X must be a np.ndarray object")
-
-
+            raise Value
         self.X = args 
-
         self.sample_size , self.T = self.X.shape
 
     def raw_data(self,x=None, y=None, lp=2):
@@ -83,11 +58,7 @@ class TemporalClustering:
     def forecast_density(self):
         pass 
 
-
-
-
-        
-
+  
 
 
 
