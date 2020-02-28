@@ -1,10 +1,13 @@
 # Project Title
 
-One Paragraph of project description goes here
+A set of general machine learning technics to understand taxi trajectory in Beijing (China). At this moment, just some collaborative filtering based approchs are being developed for forecasting.
 
-## Getting Started
+## Datasets 
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
+This whole dataset contains about some 10000 txt files which store GPS data (lon, lat), timestamp for each taxi.
+
+
+
 
 ### Prerequisites
 
