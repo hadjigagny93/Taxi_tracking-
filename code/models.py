@@ -1,9 +1,5 @@
 import numpy as np
 
-
-
-
-
 class ColaborativeFiltering:
 
     """
@@ -13,8 +9,6 @@ class ColaborativeFiltering:
     """
     pass 
 
-
-    
 class TemporalClustering:
     def __init__(self, *args, **kwargs):
         
@@ -24,18 +18,6 @@ class TemporalClustering:
         self.sample_size , self.T = self.X.shape
 
     def raw_data(self,x=None, y=None, lp=2):
-
-        """
-        inputs:
-        -------
-        x, y: time series, supposed to be np.ndarray
-        lp: lp_norm we use for distance
-
-        return:
-        -------
-        the lp_norm distance 
-        """
-
         return np.exp(np.log(np.sum(np.abs(np.power(x-y, lp))))/lp)
 
     def dynamic_time_warping(self):

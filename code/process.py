@@ -117,5 +117,5 @@ def generate_file_for_RS_models():
 def main():
     generate_file_for_RS_models()
 
-if __name__ == "__main__":
-    main()
+#if __name__ == "__main__":
+#    main()
