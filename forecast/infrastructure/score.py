@@ -1,4 +1,4 @@
-from trajectory import *
+from .trajectory import *
 
 class Naive:
 

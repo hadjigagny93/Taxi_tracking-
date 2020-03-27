@@ -1,6 +1,6 @@
 
 from sklearn.preprocessing import MinMaxScaler
-from score import Naive 
+from .score import Naive 
 import pandas as pd
 
 import os 
