@@ -10,10 +10,6 @@ OUTPUTS_DIR = os.path.join(REPO_DIR, 'outputs')
 LOGS_DIR = os.path.join(REPO_DIR, 'logs')
 
 
-
-
-
-
 def main():
     print(__file__)
     print("REPO_DIR -- {}".format(REPO_DIR))
