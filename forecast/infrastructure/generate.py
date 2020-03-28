@@ -1,8 +1,13 @@
 import random 
 import os 
+#from forecast.settings.base import DATA_DIR, OUTPUTS_DIR
+import forecast.settings.base as bs
+
+#from ..settings.base import  DATA_DIR, OUTPUTS_DIR
+
+print(bs.DATA_DIR)
 
 class GenerateDataset:
-
     """
     attributes
     ----------

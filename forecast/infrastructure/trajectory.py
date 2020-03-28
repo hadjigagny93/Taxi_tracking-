@@ -154,6 +154,7 @@ class TargetInfo:
     def __str__(self):
         return "user  --- {} , distance --- {}, speed --- {}, time --- {}, records --- {}".format(self.user, self.distance, self.speed, self.time, self.records)
 
+    @staticmethod # great bug here TODO 
     def infile(foo):
         def wrapper(self):
             try:
