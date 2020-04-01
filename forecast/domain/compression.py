@@ -9,3 +9,4 @@ class FastStray:
     For more information about the method, you can check the paper on https://arxiv.org/pdf/1608.07338.pdf
     """
     
+    pass 
