@@ -25,10 +25,11 @@ class FastStray:
     methods:
     --------
     linear_correlation_based_coef: static method, evaluate the correlation between space and time informations 
-    ksi_function: more larger is ksi the more information  we can extract  from the related point 
+    ksi_function: more larger is ksi the more information we can extract from the related point 
     moving_average_smooth_trajectory: moving average 
     update_filtering_position: return of MA methods 
     get_params_idx: return intervall which one apply MA algorithm on -- this allows specifying windows for inference
+
     """
 
     alpha: float
@@ -40,6 +41,8 @@ class FastStray:
 
     filtering_spatial_position: np.ndarray
     filtering_temporal_position: np.ndarray 
+
+    coeff: np.ndarray = np.empty()
 
     sample_size: int = position.shape[1]
     spatial_dim: tuple = (sample_size, 2)
@@ -57,9 +60,6 @@ class FastStray:
     def update_filtering_position(self):
         self.filtering_spatial_position, self.filtering_temporal_position = self.moving_average_smooth_traject()
   
-
-
-
     @staticmethod 
     def get_params_idx(idx, param, value, sample_size):
         map_dict = {
@@ -68,9 +68,6 @@ class FastStray:
         }
         inf, sup = map_dict[param]
         return np.range(inf, sup)
-
-
-
 
     @staticmethod
     def linear_correlation_based_coef(aa, tt):
@@ -105,9 +102,6 @@ class FastStray:
         sup = idx + gamma + 1 
         return np.range(inf, sup)
 # ===================================================
-
-
-
 def main():
     pass 
 
