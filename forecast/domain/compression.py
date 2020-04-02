@@ -42,7 +42,11 @@ class FastStray:
     filtering_spatial_position: np.ndarray
     filtering_temporal_position: np.ndarray 
 
-    coeff: np.ndarray = np.empty()
+    simplified_spatial_position: np.ndarray 
+    simplified_temporal_position: np.ndarray 
+
+
+    coeff: np.ndarray 
 
     sample_size: int = position.shape[1]
     spatial_dim: tuple = (sample_size, 2)
