@@ -80,7 +80,7 @@ class FastStray:
         filtering_interval = self.get_params_idx(idx, "other", self.gamma, self.sample_size)
         filtering_coeff = self.coeff[filtering_interval]
         m_p = max(filtering_coeff)
-        if self.coeff[i] == m_p:
+        if self.coeff[idx] == m_p:
             # update simplified sptial data 
             self.simplified_spatial_position = np.vstack(
                 self.simplified_spatial_position,
@@ -117,7 +117,6 @@ class FastStray:
         self.close_simplified_trajectory()
 
     def predict(self):
-
         return self.simplified_spatial_position, self.simplified_temporal_position
 
     def reduction_probs(self):
