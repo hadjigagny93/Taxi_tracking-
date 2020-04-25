@@ -1,10 +1,7 @@
 
 
 import numpy as np 
-import pandas as pd
 from dataclasses import dataclass 
-
-
 
 @dataclass 
 class FastStray:
@@ -29,9 +26,7 @@ class FastStray:
     moving_average_smooth_trajectory: moving average 
     update_filtering_position: return of MA methods 
     get_params_idx: return intervall which one apply MA algorithm on -- this allows specifying windows for inference
-
     """
-
     alpha: float
     beta: float 
     gamma: float 
@@ -46,7 +41,7 @@ class FastStray:
     simplified_temporal_position: np.ndarray 
 
 
-    coeff: np.ndarray 
+    coeff: list = []
 
     sample_size: int = position.shape[1]
     spatial_dim: tuple = (sample_size, 2)
@@ -62,8 +57,74 @@ class FastStray:
 
 
     def update_filtering_position(self):
+        # P1 -- filtering_spatial_position
+        # S1 -- iltering_temporal_position
         self.filtering_spatial_position, self.filtering_temporal_position = self.moving_average_smooth_traject()
-  
+
+    def get_coeff_on_filtering_traject(self, idx):
+        filtering_interval = self.get_params_idx(idx, "other", self.beta, self.sample_size)
+        p_nu = self.filtering_spatial_data[filtering_interval,:]
+        t_nu = self.filtering_temporal_position[filtering_interval]
+        return self.ksi_func(p_nu, t_nu)
+
+    def update_coeff(self):
+        for i in range(self.sample_size):
+            self.coeff.append(self.get_coeff_on_filtering_traject(i))
+
+
+    def open_simplified_traject(self):
+        self.simplified_spatial_position = self.filtering_spatial_position[0,:]
+        self.simplified_temporal_position = self.filtering_temporal_position[0]
+
+    def update_simplified_traject_local(self, idx):
+        filtering_interval = self.get_params_idx(idx, "other", self.gamma, self.sample_size)
+        filtering_coeff = self.coeff[filtering_interval]
+        m_p = max(filtering_coeff)
+        if self.coeff[idx] == m_p:
+            # update simplified sptial data 
+            self.simplified_spatial_position = np.vstack(
+                self.simplified_spatial_position,
+                self.filtering_spatial_position[i,:]
+                )
+            # update simplified temporal data 
+            self.simplified_temporal_postion = np.append(
+                self.simplified_temporal_position,
+                self.filtering_temporal_position) 
+    
+    def update_simplified_trajectory_global(self):
+
+        for i in range(self.sample_size):
+            self.update_simplified_traject(i)
+        #return self.simplified_spatial_position, self.simplified_temporal_postion
+
+    def close_simplified_trajectory(self):
+
+        # add last lon lat point 
+        self.simplified_spatial_position = np.vstack(
+            self.simplified_spatial_position,
+            self.filtering_spatial_position[self.sample_size-1,:]
+                )
+        # add last timestamp
+        self.simplified_temporal_postion = np.append(
+            self.simplified_temporal_position,
+            self.filtering_temporal_position[self.sample_size-1])
+
+    def fit_model(self):
+        self.update_filtering_position()
+        self.update_coeff()
+        self.open_simplified_traject()
+        self.update_simplified_trajectory_global()
+        self.close_simplified_trajectory()
+
+    def predict(self):
+        return self.simplified_spatial_position, self.simplified_temporal_position
+
+    def reduction_probs(self):
+        """
+        the percentage of redudtion data in init trajectory
+        """
+        pass
+
     @staticmethod 
     def get_params_idx(idx, param, value, sample_size):
         map_dict = {
@@ -86,6 +147,7 @@ class FastStray:
         rat_x = self.linear_correlation_based_coef(ppx, tt) ** 2
         rat_y = self.linear_correlation_based_coef(ppy, tt) ** 2
         return 1./ rat_x + 1./ rat_y 
+
 # ============= Unuseful static method methods 
 
     @staticmethod 
