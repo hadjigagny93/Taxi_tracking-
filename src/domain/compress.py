@@ -1,11 +1,8 @@
-
-
 import numpy as np 
 import pandas as pd
 from dataclasses import dataclass 
 import matplotlib.pyplot as plt 
 from  scipy.stats import pearsonr as corr
-
 @dataclass 
 class FastStray:
     """A global class that implements faststray algorithms for reduction GPS data point in a given trajectory 
