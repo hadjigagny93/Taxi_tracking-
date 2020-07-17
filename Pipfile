@@ -10,6 +10,7 @@ pandas = "*"
 numpy = "*"
 geopy = "*"
 sklearn = "*"
+ipykernel = "*"
 
 [requires]
 python_version = "3.7"
