@@ -11,6 +11,7 @@ numpy = "*"
 geopy = "*"
 sklearn = "*"
 ipykernel = "*"
+matplotlib = "*"
 
 [requires]
 python_version = "3.7"
