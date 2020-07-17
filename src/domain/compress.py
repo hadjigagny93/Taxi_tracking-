@@ -1,7 +1,6 @@
 import numpy as np 
 import pandas as pd
-from dataclasses import dataclass 
-import matplotlib.pyplot as plt 
+from dataclasses import dataclass  
 from  scipy.stats import pearsonr as corr
 
 @dataclass 
@@ -86,13 +85,7 @@ class FastStray:
     def get_params_idx(idx, value, sample_size):
         inf, sup = max(0, idx - value), min(idx + value, sample_size)
         return np.arange(inf, sup)
-
-    @staticmethod
-    def plot_average_filtering_deviation(init, avg):
-        """ init is the noisy trajectory, avg the filter one """
-        plt.scatter(avg[:, 0], avg[:, 1])
-        plt.scatter(init[:, 0], init[:, 1], color='r')
-
+        
     @staticmethod
     def ksi_func(pp, tt):
         ppx, ppy = pp.T
